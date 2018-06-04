@@ -64,7 +64,7 @@ public:
     void printWeekly();
     void printDecades();
     void printSeasonly();
-    void convertToCustom();
+    void convertToCustom(int fst, int month);
 
 private:
     const int MonthDuration31 = 31;
@@ -83,6 +83,7 @@ private:
     void printMHeadline(int i, int counter);
     void printWHeadline(int next);
     void printSHeadline(int next);
+    int WhatIsSeasone(int day, int month);
 };
 
 #endif // CALENDAR_H

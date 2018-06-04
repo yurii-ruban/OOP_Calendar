@@ -35,6 +35,7 @@ Calendar::Calendar()
         year.push_back(temp);
     }
 
+    //Filling decade clendar
     for(int i=1; i<=maxOfDecades; ++i)
     {
         if(i==shiftToSeasone1 || i==shiftToSeasone2)
@@ -49,6 +50,77 @@ Calendar::Calendar()
         {
             seasons.push_back(Decade());
         }
+    }
+}
+
+void Calendar::convertToCustom(int day, int month)
+{
+    int counter =0, dec =1;
+    int start = 22;
+    int start_s;
+    int seasone = WhatIsSeasone(day, month);
+    switch(seasone)
+    {
+    case 2:
+        start_s = 3;
+        break;
+    case 3:
+        start_s = 6;
+        break;
+    case 4:
+        start_s = 9;
+        break;
+    case 1:
+        start_s = 12;
+    }
+
+    for(int i=month; i>=start_s; --i)
+    {
+        for(int j = day; j>0; --j)
+        {
+            counter++;
+            if(counter ==10)
+            {
+                counter=0;
+                dec++;
+            }
+            if(i== start_s && j == start)
+                break;
+        }
+        day = year[month--].size();
+    }
+    std::cout<<"\nDec: "<< dec<<" Day: "<< counter << std::endl;
+}
+
+int Calendar::WhatIsSeasone(int day, int month)
+{
+    switch (month)
+    {
+    case 3:
+        if(day>=22) return 2;
+        else return 1;
+    case 4:
+        return 2;
+    case 5:
+        return 2;
+    case 6:
+        if(day<=21) return 2;
+        else return 3;
+    case 7:
+        return 3;
+    case 8:
+        return 3;
+    case 9:
+        if(day<=21) return 3;
+        else return 4;
+    case 10:
+        return 4;
+    case 11:
+        return 4;
+    case 12:
+        if(day<=21) return 5;
+    default:
+        return 6;
     }
 }
 
@@ -139,20 +211,10 @@ void Calendar::printSeasonly()
     std::cout<<std::endl;
 }
 
-void Calendar::convertToCustom(int day, int months)
-{
-
-}
-
 void Calendar::printSHeadline(int next)
 {
     std::cout<<"\n*********************************************************\n";
     std::cout<<"\t\t\t"<<seasons[0].getSeasonsNames()[next]<<"\n";
-}
-
-std::string Calendar::WhatIsSeasone(int day, int months)
-{
-
 }
 
 void Calendar::printWHeadline(int next)
