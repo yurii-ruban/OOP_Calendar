@@ -53,77 +53,6 @@ Calendar::Calendar()
     }
 }
 
-void Calendar::convertToCustom(int day, int month)
-{
-    int counter =0, dec =1;
-    int start = 22;
-    int start_s;
-    int seasone = WhatIsSeasone(day, month);
-    switch(seasone)
-    {
-    case 2:
-        start_s = 3;
-        break;
-    case 3:
-        start_s = 6;
-        break;
-    case 4:
-        start_s = 9;
-        break;
-    case 1:
-        start_s = 12;
-    }
-
-    for(int i=month; i>=start_s; --i)
-    {
-        for(int j = day; j>0; --j)
-        {
-            counter++;
-            if(counter ==10)
-            {
-                counter=0;
-                dec++;
-            }
-            if(i== start_s && j == start)
-                break;
-        }
-        day = year[month--].size();
-    }
-    std::cout<<"\nDec: "<< dec<<" Day: "<< counter << std::endl;
-}
-
-int Calendar::WhatIsSeasone(int day, int month)
-{
-    switch (month)
-    {
-    case 3:
-        if(day>=22) return 2;
-        else return 1;
-    case 4:
-        return 2;
-    case 5:
-        return 2;
-    case 6:
-        if(day<=21) return 2;
-        else return 3;
-    case 7:
-        return 3;
-    case 8:
-        return 3;
-    case 9:
-        if(day<=21) return 3;
-        else return 4;
-    case 10:
-        return 4;
-    case 11:
-        return 4;
-    case 12:
-        if(day<=21) return 5;
-    default:
-        return 6;
-    }
-}
-
 void Calendar::printMonthly()
 {
     int counter=0;
@@ -211,10 +140,139 @@ void Calendar::printSeasonly()
     std::cout<<std::endl;
 }
 
+void Calendar::convertToDefault(int day, int dec, int tSeasone)
+{
+    int counter=0, sCounter=1;
+    int month =0, dayOfWeek=4;
+    int dDay=0;
+
+    for(int i=0; i<seasons.size();++i)
+    {
+        for(int j=0; j<seasons[i].getDays().size();++j)
+        {
+            if(i==shiftToSeasone1 || i==shiftToSeasone2 || shiftToSeasone3)
+            {
+                sCounter++;
+            }
+
+            counter++;
+            dayOfWeek++;
+
+            if(counter==year[month].size())
+            {
+                month++;
+                counter=0;
+            }
+
+            if(dayOfWeek>week.size())
+            {
+                dayOfWeek=1;
+            }
+
+        }
+        if(sCounter == tSeasone)
+        {
+            break;
+        }
+    }
+    std::cout<<"\n\t\t\t C O N V E R T  T O  D E F A U L T";
+    std::cout<<"\n"<<dDay<<"."<<dayOfWeek<<"."<<month<<std::endl;
+}
+
+void Calendar::convertToCustom(int day, int month)
+{
+    int count = 0, dec = 1;
+    int start = 0;
+    int tSeasone = WhatIsSeasone(day, month);
+    switch (tSeasone)
+    {
+    case 2:
+        start = 3;
+        break;
+    case 3:
+        start = 6;
+        break;
+    case 4:
+        start = 9;
+        break;
+    default:
+        start =12;
+        break;
+    }
+
+    if(start ==12)
+    {
+        if(month!=12)
+        {
+            start =0;
+        }
+    }
+
+    for(int i = month; i>=start; --i)
+    {
+        if(i==start)
+        {
+            count+=(day-firstDayOfSeasone+1);
+        }
+        else
+        {
+            count+= day;
+        }
+
+        dec+= count/10;
+        count=count%10;
+
+        if(start ==0 && i==1)
+        {
+            day = year[11].size();
+        }
+        else
+        {
+            day=year[i-2].size();
+        }
+    }
+    if(count==0) count=10;
+    std::cout<<"\n\t\t\t C O N V E R T  T O  C U S T O M";
+    std::cout<<"\n"<<count<<"."<<dec<<"."<<tSeasone<<std::endl;
+}
+
 void Calendar::printSHeadline(int next)
 {
     std::cout<<"\n*********************************************************\n";
     std::cout<<"\t\t\t"<<seasons[0].getSeasonsNames()[next]<<"\n";
+}
+
+int Calendar::WhatIsSeasone(int day, int month)
+{
+    switch (month)
+    {
+    case 3:
+        if(day>=firstDayOfSeasone) return 2;
+        else return 1;
+    case 4:
+        return 2;
+    case 5:
+        return 2;
+    case 6:
+        if(day>=firstDayOfSeasone) return 3;
+        else return 2;
+    case 7:
+        return 3;
+    case 8:
+        return 3;
+    case 9:
+        if(day>=firstDayOfSeasone) return 4;
+        else return 3;
+    case 10:
+        return 4;
+    case 11:
+        return 4;
+    case 12:
+        if(day>=firstDayOfSeasone) return 1;
+        else return 4;
+    default:
+        return 1;
+    }
 }
 
 void Calendar::printWHeadline(int next)

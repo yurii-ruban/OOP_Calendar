@@ -7,20 +7,33 @@ int main()
     //c.printWeekly();
     c.printSeasonly();
     c.printDecades();
-    std::cout<<"\n \t\t\t\tT E S T  C O N V E R T E R\n";
-    std::cout<<"22.03";
-    c.convertToCustom(22,3);
 
-//    std::cout<<"07.03";
-//    c.convertToCustom(7,3);
+    //CONVERTS
 
-    std::cout<<"21.06";
-    c.convertToCustom(21,6);
+    // 22.03 -> 01.01
+    c.convertToCustom(22, 3);
 
-    std::cout<<"22.06";
-    c.convertToCustom(22,6);
+    // 05.07 -> 02.04
+    c.convertToCustom(5, 7);
 
-    std::cout<<"22.09";
-    c.convertToCustom(22,9);
+    // 08.07 -> 2.7
+    c.convertToCustom(8, 7);
+
+    // 21.09 ->
+    c.convertToCustom(21, 9);
+
+    // 30.06 ->
+    c.convertToCustom(30, 6);
+
+    // 03.01 -> 03.02.01
+    c.convertToCustom(3, 1);
+
+    // 27.12 -> 06.01.01
+    c.convertToCustom(27, 12);
+
+
+    //06.01.01 -> 27.3.12
+    c.convertToDefault(6,1,1);
+
     return 0;
 }
