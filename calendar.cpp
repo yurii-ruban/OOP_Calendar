@@ -141,27 +141,37 @@ void Calendar::printSeasonly()
 
 void Calendar::convertToDefault(int day, int dec, int tSeasone)
 {
-    int counter=0;
-    int month =0, dayOfWeek=5;
+    int counter=0, sCounter=1;
+    int month =0, dayOfWeek=4;
     int dDay=0;
 
     for(int i=0; i<seasons.size();++i)
     {
-        for(int j=0;j<seasons[i].getDays().size();++j)
+        for(int j=0; j<seasons[i].getDays().size();++j)
         {
+            if(i==shiftToSeasone1 || i==shiftToSeasone2 || shiftToSeasone3)
+            {
+                sCounter++;
+            }
+
             counter++;
             dayOfWeek++;
 
-            if(dayOfWeek > week.size())
+            if(counter==year[month].size())
+            {
+                month++;
+                counter=0;
+            }
+
+            if(dayOfWeek>week.size())
             {
                 dayOfWeek=1;
             }
 
-            if(counter==year[month].size()+1)
-            {
-                month++;
-                counter=1;
-            }
+        }
+        if(sCounter == tSeasone)
+        {
+            break;
         }
     }
     std::cout<<"\n\t\t\t C O N V E R T  T O  D E F A U L T";

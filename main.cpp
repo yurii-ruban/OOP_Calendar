@@ -11,7 +11,7 @@ int main()
     //CONVERTS
 
     // 22.03 -> 01.01
-    c.convertToCustom(31, 3);
+    c.convertToCustom(22, 3);
 
     // 05.07 -> 02.04
     c.convertToCustom(5, 7);

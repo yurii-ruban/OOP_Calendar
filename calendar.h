@@ -74,6 +74,7 @@ private:
     const int maxOfDecades = 39;
     const int shiftToSeasone1 = 29;
     const int shiftToSeasone2 = 19;
+    const int shiftToSeasone3 = 9;
     const int firstDayOfSeasone = 22;
     const int lastDayOfSeasone = 21;
 
