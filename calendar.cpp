@@ -1,5 +1,8 @@
 #include "calendar.h"
 
+
+const std::vector<std::string> Decade::seasonsNames = {"Winter", "Spring", "Summer", "Autumn"};
+
 Calendar::Calendar()
 {
     week.push_back("Mon");
@@ -131,7 +134,7 @@ void Calendar::printSeasonly()
             std::cout<<" "<<seasons[i].getDays()[j];
         }
 
-        if(next<seasons[i].getSeasonsNames().size() && (seasons[i].getDays().size()<seasons[i].decadeDuration || (seasons[i].getSeasonsNames()[next]=="Spring" && counter==seasons[i].decadeDuration)))
+        if(next<Decade::seasonsNames.size() && (seasons[i].getDays().size()<seasons[i].decadeDuration || (Decade::seasonsNames[next]=="Spring" && counter==seasons[i].decadeDuration)))
         {
             printSHeadline(next++);
             counter =1;
@@ -140,69 +143,112 @@ void Calendar::printSeasonly()
     std::cout<<std::endl;
 }
 
-void Calendar::convertToDefault(int day, int dec, int tSeasone)
+std::string Calendar::convertToDefault(std::string s)
 {
-    int counter=0, sCounter=1;
-    int month =0, dayOfWeek=4;
-    int dDay=0;
+    int counter=0, sCounter=1, dCounter=1;//I need this vars that give me an exit from a loop
+
+    //this means that our callendar will calculate from start point of my Calendar
+    int month =11;
+    int dDay=21;
+    int dayOfWeek=4;
+
+
+    bool flag = false;//I use this for exit from double loop
+
+    //Parse input data
+    std::vector<int> temp = Parse(s);
+    int day = temp[0];
+    int dec = temp[1];
+    int tSeasone = temp[2];
+
 
     for(int i=0; i<seasons.size();++i)
     {
-        for(int j=0; j<seasons[i].getDays().size();++j)
+        if(i==shiftToSeasone1 || i==shiftToSeasone2 || i==shiftToSeasone3) //Check to change seasone
         {
-            if(i==shiftToSeasone1 || i==shiftToSeasone2 || shiftToSeasone3)
-            {
-                sCounter++;
-            }
+            sCounter++;
+            dCounter=1;
+        }
 
+        for(int j=0; j<seasons[i].getDays().size();++j) //Just go on a decades and count our vars
+        {
             counter++;
             dayOfWeek++;
+            dDay++;
 
-            if(counter==year[month].size())
+            if(dDay>year[month].size())
             {
-                month++;
-                counter=0;
+                if(month == decNum)//It means that i need go back to January or forward from current month
+                {
+                    month = 0;
+                    dDay=1;
+                }
+                else
+                {
+                    month++;
+                    dDay=1;
+                }
             }
 
-            if(dayOfWeek>week.size())
+            if(dayOfWeek>week.size()) //Counting a day in a week
             {
                 dayOfWeek=1;
             }
 
+            if(sCounter == tSeasone && dCounter==dec && counter==day)//Condition for exit from a loop
+            {
+                flag= true;
+                break;
+            }
         }
-        if(sCounter == tSeasone)
+        if(flag)
         {
             break;
         }
+        dCounter++;
+        counter=0;
     }
-    std::cout<<"\n\t\t\t C O N V E R T  T O  D E F A U L T";
-    std::cout<<"\n"<<dDay<<"."<<dayOfWeek<<"."<<month<<std::endl;
+
+    return std::to_string(dDay)+"."+std::to_string(dayOfWeek)+"."+std::to_string(++month);
 }
 
-void Calendar::convertToCustom(int day, int month)
+std::string Calendar::convertToCustom(std::string s)
 {
-    int count = 0, dec = 1;
-    int start = 0;
+    const int startSeasone1 = 12;
+    const int startSeasone2 = 3;
+    const int startSeasone3 = 6;
+    const int startSeasone4 = 9;
+
+    int count = 0, dec = 1;//I need this vars for count number of decade and day
+
+    int start = 0;//It helps me to realise the Point where should i go
+
+    //Parse input data
+    std::vector<int> temp = Parse(s);
+    int day = temp[0];
+    int month = temp[1];
+
     int tSeasone = WhatIsSeasone(day, month);
     switch (tSeasone)
     {
     case 2:
-        start = 3;
+        start = startSeasone2;
         break;
     case 3:
-        start = 6;
+        start = startSeasone3;
         break;
     case 4:
-        start = 9;
+        start = startSeasone4;
         break;
     default:
-        start =12;
+        start = startSeasone1;
         break;
     }
 
-    if(start ==12)
+    //Check and give start point =0 if there's December. It makes me easier to go in array
+    if(start == startSeasone1)
     {
-        if(month!=12)
+        if(month!=months.size())
         {
             start =0;
         }
@@ -212,67 +258,98 @@ void Calendar::convertToCustom(int day, int month)
     {
         if(i==start)
         {
-            count+=(day-firstDayOfSeasone+1);
+            count+=(day-firstDayOfSeasone+1); //Numbers between start point of seasone and our day in this month
         }
         else
         {
             count+= day;
         }
 
-        dec+= count/10;
-        count=count%10;
+        dec+= count/Decade::decadeDuration; //Number of decades
+        count=count%Decade::decadeDuration; //Number of days in decades
 
-        if(start ==0 && i==1)
+        if(start == 0 && i==1) //If we have a new month then we need to use it size
         {
-            day = year[11].size();
+            day = year[decNum].size();
         }
         else
         {
             day=year[i-2].size();
         }
     }
-    if(count==0) count=10;
-    std::cout<<"\n\t\t\t C O N V E R T  T O  C U S T O M";
-    std::cout<<"\n"<<count<<"."<<dec<<"."<<tSeasone<<std::endl;
+
+    //Mod 10 sometimes can give 0. It means that a decade has exactly 10 days
+    if(count==0)
+    {
+        count = Decade::decadeDuration;
+    }
+
+    return std::to_string(count)+"."+std::to_string(dec)+"."+std::to_string(tSeasone);
 }
 
 void Calendar::printSHeadline(int next)
 {
     std::cout<<"\n*********************************************************\n";
-    std::cout<<"\t\t\t"<<seasons[0].getSeasonsNames()[next]<<"\n";
+    std::cout<<"\t\t\t"<<Decade::seasonsNames[next]<<"\n";
 }
 
 int Calendar::WhatIsSeasone(int day, int month)
 {
+    enum season {Winter=1, Spring, Summer, Autumn} s;
     switch (month)
     {
     case 3:
-        if(day>=firstDayOfSeasone) return 2;
-        else return 1;
+        return day>=firstDayOfSeasone?Spring:Winter;
     case 4:
-        return 2;
+        return Spring;
     case 5:
-        return 2;
+        return Spring;
     case 6:
-        if(day>=firstDayOfSeasone) return 3;
-        else return 2;
+        return day>=firstDayOfSeasone?Summer:Spring;
     case 7:
-        return 3;
+        return Summer;
     case 8:
-        return 3;
+        return Summer;
     case 9:
-        if(day>=firstDayOfSeasone) return 4;
-        else return 3;
+        return day>=firstDayOfSeasone?Autumn:Summer;
     case 10:
-        return 4;
+        return Autumn;
     case 11:
-        return 4;
+        return Autumn;
     case 12:
-        if(day>=firstDayOfSeasone) return 1;
-        else return 4;
+        return day>=firstDayOfSeasone?Winter:Autumn;
     default:
-        return 1;
+        return Winter;
     }
+}
+
+std::vector<int> Calendar::Parse(std::string s)
+{
+    std::vector<int> line;
+    std::string delimiter = ".";
+    size_t pos = 0;
+    std::string token;
+
+    while ((pos = s.find(delimiter)) != std::string::npos)
+    {
+        token = s.substr(0, pos);
+        if(token[0]=='0')
+        {
+            token.erase(0,1);
+        }
+
+        line.push_back(stoi(token));
+        s.erase(0, pos + delimiter.length());
+    }
+
+    token = s.substr(0, pos);
+    if(token[0]=='0')
+    {
+        token.erase(0,1);
+    }
+    line.push_back(stoi(token));
+
+    return line;
 }
 
 void Calendar::printWHeadline(int next)
