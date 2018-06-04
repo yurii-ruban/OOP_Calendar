@@ -64,7 +64,8 @@ public:
     void printWeekly();
     void printDecades();
     void printSeasonly();
-    void convertToCustom();
+    void convertToCustom(int day, int month);
+    void convertToDefault(int day, int dec, int tSeasone);
 
 private:
     const int MonthDuration31 = 31;
@@ -73,6 +74,8 @@ private:
     const int maxOfDecades = 39;
     const int shiftToSeasone1 = 29;
     const int shiftToSeasone2 = 19;
+    const int firstDayOfSeasone = 22;
+    const int lastDayOfSeasone = 21;
 
 
     std::vector<Decade> seasons;
@@ -83,6 +86,7 @@ private:
     void printMHeadline(int i, int counter);
     void printWHeadline(int next);
     void printSHeadline(int next);
+    int WhatIsSeasone(int day, int month);
 };
 
 #endif // CALENDAR_H
