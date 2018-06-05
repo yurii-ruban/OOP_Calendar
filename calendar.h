@@ -27,6 +27,7 @@ private:
     unsigned short duration;
 };
 
+//Decade class
 class Decade
 {
 
@@ -47,14 +48,16 @@ public:
         days.push_back(second);
     }
 
-    const int decadeDuration = 10;
     const std::vector<int> getDays(){return days;}
-    const std::vector<std::string> getSeasonsNames(){return seasonsNames;}
+
+    static const std::vector<std::string> seasonsNames;
+    static const int decadeDuration = 10;
 
 private:
-   std::vector<int> days;
-   const std::vector<std::string> seasonsNames = {"Winter", "Spring", "Summer", "Autumn"};
+    std::vector<int> days;
 };
+
+
 
 class Calendar
 {
@@ -64,19 +67,22 @@ public:
     void printWeekly();
     void printDecades();
     void printSeasonly();
-    void convertToCustom(int day, int month);
-    void convertToDefault(int day, int dec, int tSeasone);
+    std::string convertToCustom(std::string s);
+    std::string convertToDefault(std::string s);
 
 private:
     const int MonthDuration31 = 31;
     const int MonthDuration30 = 30;
     const int MonthDuration28 = 28;
+
     const int maxOfDecades = 39;
     const int shiftToSeasone1 = 29;
     const int shiftToSeasone2 = 19;
     const int shiftToSeasone3 = 9;
     const int firstDayOfSeasone = 22;
     const int lastDayOfSeasone = 21;
+
+    static const int decNum = 11; //December's number in the Calendar. Need for 2 functions.
 
 
     std::vector<Decade> seasons;
@@ -88,6 +94,7 @@ private:
     void printWHeadline(int next);
     void printSHeadline(int next);
     int WhatIsSeasone(int day, int month);
+    std::vector<int> Parse(std::string s);
 };
 
 #endif // CALENDAR_H
