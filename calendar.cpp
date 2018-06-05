@@ -342,6 +342,7 @@ std::vector<int> Calendar::Parse(std::string s)
         s.erase(0, pos + delimiter.length());
     }
 
+    //Can't find delimiter after the last word. So I need one more iteration
     token = s.substr(0, pos);
     if(token[0]=='0')
     {

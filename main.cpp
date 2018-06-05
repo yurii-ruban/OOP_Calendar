@@ -29,5 +29,11 @@ int main()
     //23.12 ->02.01.01                                  02.01.01 -> 23.6.12
     std::cout<<c.convertToCustom("23.12")<<" = "<<c.convertToDefault("2.1.1")<<std::endl;
 
+    //21.1 -> 01.04.1                                   01.04.1 -> 21.7.1
+    std::cout<<c.convertToCustom("21.1")<<" = "<<c.convertToDefault("1.4.1")<<std::endl;
+
+    //28.02 -> 07.09.1                                   09.07.1  -> 28.3.2
+    std::cout<<c.convertToCustom("28.2")<<" = "<<c.convertToDefault("09.07.1")<<std::endl;
+
     return 0;
 }
